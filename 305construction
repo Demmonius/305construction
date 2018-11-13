@@ -1,1 +1,56 @@
 #!/usr/bin/env python3
+import argparse
+import sys
+
+class Task:
+	def __init__(self, content):
+		text = content.split('\n')[0].split(';')
+		self._data = {}
+		if len(text) >= 3:
+			self._data['key']  = text[0]
+			self._data['name'] = text[1]
+			self._data['time'] = int(text[2])
+			self._data['prec'] = text[3:len(text)] if len(text) >= 4 else []
+
+			self._data['succ'] = []
+			self._data['begin_early'] = 0
+			self._data['begin_last'] = 0
+			self._data['end'] = 0
+			self._data['deep'] = 0
+		else :
+			print("Incorrect content : " + content)
+
+	def get_data(self, key) :
+		try:
+			return (self._data[key])
+		except KeyError:
+			print("No key found", file=sys.stderr)
+
+	def set_data(self, key, val):
+		self._data[key] = val
+
+	def __str__(self) :
+		return (str(self._data['key']) + "\t" +
+			str(self._data['name']) + "\t" +
+			str(self._data['begin_early']) + ":" +
+			str(self._data['begin_last']) + ":" +
+			str(self._data['time']) + ":" +
+			str(self._data['end']) + "\t(" +
+			str(self._data['deep']) + ")\t" +
+			str(self._data['prec']) + "\t|$|\t" +
+			str(self._data['succ']))
+
+
+
+def main():
+	pass
+
+parser = argparse.ArgumentParser(description='305construction')
+parser.add_argument("pathfile", help="pathfile name", type=argparse.FileType('r', encoding='iso-8859-1'))
+try :
+	args = parser.parse_args()
+except :
+	exit(84)
+
+if __name__ == '__main__':
+    main()
