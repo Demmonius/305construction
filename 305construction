@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import argparse
-import attrgetter
+import operator
 import sys
 
 class Task:
@@ -14,7 +14,7 @@ class Task:
 			self._data['prec'] = text[3:len(text)] if len(text) >= 4 else []
 
 			self._data['succ'] = []
-			self._data['begin_early'] = 0
+			self.__dict__['begin_early'] = 0
 			self._data['begin_last'] = 0
 			self._data['end'] = 0
 			self._data['deep'] = 0
@@ -25,7 +25,7 @@ class Task:
 		try:
 			return (self._data[key])
 		except KeyError:
-			print("No key found", file=sys.stderr)
+			return (self.__dict__[key])
 
 	def set_data(self, key, val):
 		self._data[key] = val
@@ -93,7 +93,7 @@ class Manager :
 		return max(tmp)
         
 	def early_ctor(self) :
-		for ts in list(self._data['tasks']) :
+		for ts in list(self._data['tasks']):
 			if len(ts.get_data("prec")) == 0 :
 				ts.set_data("end", int(ts.get_data('begin_early')) + int(ts.get_data('time'))) 
 			else:
@@ -108,7 +108,7 @@ class Manager :
 		if self.task_of_key(key).get_data('end') == self._data['total'] :
 			return (int(self.task_of_key(key).get_data('begin_early')))
 		elif len(self.task_of_key(key).get_data('succ')) == 0 :
-				return (int(self.total) - int(self.task_of_key(key).get_data('time')))
+				return (int(self._data["total"]) - int(self.task_of_key(key).get_data('time')))
 		else :
 			tmp = []
 			for s in self.task_of_key(key).get_data('succ') :
@@ -121,10 +121,10 @@ class Manager :
 			ts.set_data("begin_last", int(self.last(ts.get_data('key'))))
 
 	def line(self, sta, sto) :
-		return ''.join(["=" for i in range(sta + sto) if i >= sta else " "])
+		return ''.join(["=" if i >= sta else " " for i in range(sta + sto)])
             
 	def display(self) :
-		self._data['tasks'] = sorted(self._data['tasks'], key = attrgetter('begin_early', "end"))
+		self._data['tasks'] = sorted(self._data['tasks'], key=operator.attrgetter('begin_early'))
 		print("Total duration of construction: %s weeks\n"% str(self._data["total"]))
 		for t in  list(self._data['tasks']) :
 			if t.get_data("begin_early") == t.get_data("begin_last") :
@@ -138,7 +138,8 @@ class Manager :
 
 
 def main():
-	pass
+	m = Manager(args.pathfile)
+	m.display()
 
 parser = argparse.ArgumentParser(description='305construction')
 parser.add_argument("pathfile", help="pathfile name", type=argparse.FileType('r', encoding='iso-8859-1'))
