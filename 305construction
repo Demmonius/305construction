@@ -138,8 +138,9 @@ class Manager :
 
 
 def main():
-	m = Manager(args.pathfile)
-	m.display()
+	print(''.join([x for x in args.pathfile]))
+	# m = Manager(args.pathfile)
+	# m.display()
 
 parser = argparse.ArgumentParser(description='305construction')
 parser.add_argument("pathfile", help="pathfile name", type=argparse.FileType('r', encoding='iso-8859-1'))
