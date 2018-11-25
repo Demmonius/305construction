@@ -130,7 +130,7 @@ class Manager :
 			if t.get_data("begin_early") == t.get_data("begin_last") :
 				print(t.get_data("key") + " must begin at t=" + str(t.get_data("begin_early")))
 			else :
-				print(t.get_data("key") + " must begin between t=" + str(t.get_data("begin_early")) + " and t=" + str(t.get_data("begin_last")))
+				print(t.get_data("key") + " must begin between t=" + str(t.get_data("begin_early") + 1) + " and t=" + str(t.get_data("begin_last") - 1))
 		print()
 		for t in list(self._data['tasks']) :
 			print(t.get_data("key") + "\t(" + str(t.get_data("begin_last") - t.get_data("begin_early")) + ")\t" + self.line(int(t.get_data("begin_early")), int(t.get_data("time"))))
@@ -138,9 +138,8 @@ class Manager :
 
 
 def main():
-	print(''.join([x for x in args.pathfile]))
-	# m = Manager(args.pathfile)
-	# m.display()
+	m = Manager(args.pathfile)
+	m.display()
 
 parser = argparse.ArgumentParser(description='305construction')
 parser.add_argument("pathfile", help="pathfile name", type=argparse.FileType('r', encoding='iso-8859-1'))
